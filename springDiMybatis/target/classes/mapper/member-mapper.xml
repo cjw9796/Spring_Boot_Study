@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- xml파일이 여러가지 설정을 할 수 있다. mybatis를 할 수도 있고 bean 생성을 할 수도 있고 패키지에 관한 내용이나, 
+	필터(한글 깨짐) -->
+<!-- 실질적으로 sql이 들어가는 Mapper -->
+
+<!-- 추가하기 취미 처리를 해야되는데 java : 배열, ["축구","골프","야구"] DB : 문자열, "축구,골프,야구" insert 
+	태그를 이용해서 실제 명령문들을 작성한다. -->
+<mapper namespace="memberMapper">
+	<!-- 실제 데이터를 매칭시켜주는 resultMap 선언해서 나머지 sql문도 정리해서 마무리! -->
+	<resultMap type="com.kh.mybatis.member.model.vo.Member" id="memberMap">
+		<result property="id" column="id"/> 
+		<result property="password" column="password"/> 
+		<result property="name" column="name"/> 
+		<result property="age" column="age"/> 
+		<result property="gender" column="gender"/> 
+		<result property="phone" column="phone"/> 
+		<result property="address" column="address"/> 
+		<result property="email" column="email"/> 
+		<result property="hobby" column="hobby" typeHandler="com.kh.mybatis.member.common.MemberTypeHandler"/> 
+		<result property="enrollDate" column="enrollDate"/> 
+	</resultMap>
+	
+
+	<insert id="insertMember" parameterType="com.kh.mybatis.member.model.vo.Member">
+
+		INSERT INTO MEMBER VALUES(
+		#{id}, #{password}, #{name}, #{age},
+		#{gender}, #{phone}, #{address}, #{email},
+		#{hobby, typeHandler = com.kh.mybatis.member.common.MemberTypeHandler},
+		default
+		)
+
+	</insert>
+
+	<!-- 조회(전체 조회) id: selectMemberAll resultMap="" -->
+	<select id="selectMemberAll" resultMap="memberMap">
+		SELECT * FROM MEMBER
+	</select>
+	
+	
+	<!-- 조회(단건 조회). id값을 이용해서 하나의 정보만 저장. 넘어오는 타입도 존재해야되고 결과를 돌려줄 resultMap
+	id: selectMember resultMap="" -->
+<select id="selectMemberById" resultMap="memberMap" parameterType="string">
+		SELECT * FROM MEMBER WHERE ID = #{id}
+	</select>
+	
+	
+	<!-- 삭제 id: deleteMember parameterType= String -->
+	<!-- delete(String id)  -->
+	
+	<delete id="deleteMember" parameterType="string" >
+		DELETE FROM MEMBER WHERE ID = #{id}
+	</delete>
+	
+
+</mapper>
